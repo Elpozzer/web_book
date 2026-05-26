@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Swappers DOM (Presets)
     const coverSwapButtons = document.querySelectorAll('.btn-cover');
     const bgSwapButtons = document.querySelectorAll('.btn-bg');
+    const pageSwapButtons = document.querySelectorAll('.btn-page');
 
     // Local Custom File Uploaders
     const inputCustomCover = document.getElementById('input-custom-cover');
@@ -49,6 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const vaultBgThumb = document.getElementById('vault-bg-thumb');
     const vaultBgName = document.getElementById('vault-bg-name');
     const vaultBgDl = document.getElementById('vault-bg-dl');
+
+    const vaultPageThumb = document.getElementById('vault-page-thumb');
+    const vaultPageName = document.getElementById('vault-page-name');
+    const vaultPageDl = document.getElementById('vault-page-dl');
 
     // State Variables
     let isDragging = false;
@@ -258,10 +263,12 @@ document.addEventListener('DOMContentLoaded', () => {
             inputCustomCover.parentElement.classList.add('has-file');
 
             // Sync Vault HUD
-            vaultCoverThumb.style.backgroundImage = `url('${dataUrl}')`;
-            vaultCoverName.textContent = file.name;
-            vaultCoverDl.href = dataUrl;
-            vaultCoverDl.download = file.name;
+            if (vaultCoverThumb) {
+                vaultCoverThumb.style.backgroundImage = `url('${dataUrl}')`;
+                vaultCoverName.textContent = file.name;
+                vaultCoverDl.href = dataUrl;
+                vaultCoverDl.download = file.name;
+            }
 
             // Remove active presets button styling
             coverSwapButtons.forEach(btn => btn.classList.remove('active'));
@@ -315,6 +322,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set pages edge custom texture variable
             document.documentElement.style.setProperty('--current-pages-texture', `url('${dataUrl}')`);
             inputCustomPages.parentElement.classList.add('has-file');
+
+            // Sync Vault HUD
+            if (vaultPageThumb) {
+                vaultPageThumb.style.backgroundImage = `url('${dataUrl}')`;
+                vaultPageName.textContent = file.name;
+                vaultPageDl.href = dataUrl;
+                vaultPageDl.download = file.name;
+            }
+
+            pageSwapButtons.forEach(btn => btn.classList.remove('active'));
         };
         reader.readAsDataURL(file);
     });
@@ -333,10 +350,12 @@ document.addEventListener('DOMContentLoaded', () => {
             inputCustomBg.parentElement.classList.add('has-file');
 
             // Sync Vault HUD
-            vaultBgThumb.style.backgroundImage = `url('${dataUrl}')`;
-            vaultBgName.textContent = file.name;
-            vaultBgDl.href = dataUrl;
-            vaultBgDl.download = file.name;
+            if (vaultBgThumb) {
+                vaultBgThumb.style.backgroundImage = `url('${dataUrl}')`;
+                vaultBgName.textContent = file.name;
+                vaultBgDl.href = dataUrl;
+                vaultBgDl.download = file.name;
+            }
 
             bgSwapButtons.forEach(btn => btn.classList.remove('active'));
         };
@@ -359,10 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputCustomCover.value = '';
                 
                 // Sync Vault HUD back
-                vaultCoverThumb.style.backgroundImage = `url('${defaultCover}')`;
-                vaultCoverName.textContent = defaultCover;
-                vaultCoverDl.href = defaultCover;
-                vaultCoverDl.download = defaultCover;
+                if (vaultCoverThumb) {
+                    vaultCoverThumb.style.backgroundImage = `url('${defaultCover}')`;
+                    vaultCoverName.textContent = defaultCover;
+                    vaultCoverDl.href = defaultCover;
+                    vaultCoverDl.download = defaultCover;
+                }
             } 
             else if (target === 'back') {
                 bookBack.classList.remove('has-custom-back');
@@ -377,9 +398,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputCustomSpine.value = '';
             } 
             else if (target === 'pages') {
-                document.documentElement.style.setProperty('--current-pages-texture', "url('pages_standard.png')");
+                const activePageBtn = Array.from(pageSwapButtons).find(btn => btn.classList.contains('active'));
+                const defaultPages = activePageBtn ? activePageBtn.getAttribute('data-pages') : 'pages_standard.png';
+                document.documentElement.style.setProperty('--current-pages-texture', `url('${defaultPages}')`);
                 inputCustomPages.parentElement.classList.remove('has-file');
                 inputCustomPages.value = '';
+
+                // Sync Vault HUD back
+                if (vaultPageThumb) {
+                    vaultPageThumb.style.backgroundImage = `url('${defaultPages}')`;
+                    vaultPageName.textContent = defaultPages;
+                    vaultPageDl.href = defaultPages;
+                    vaultPageDl.download = defaultPages;
+                }
             } 
             else if (target === 'bg') {
                 const activeBgBtn = Array.from(bgSwapButtons).find(btn => btn.classList.contains('active'));
@@ -388,10 +419,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputCustomBg.parentElement.classList.remove('has-file');
                 inputCustomBg.value = '';
 
-                vaultBgThumb.style.backgroundImage = `url('${defaultBg}')`;
-                vaultBgName.textContent = defaultBg;
-                vaultBgDl.href = defaultBg;
-                vaultBgDl.download = defaultBg;
+                if (vaultBgThumb) {
+                    vaultBgThumb.style.backgroundImage = `url('${defaultBg}')`;
+                    vaultBgName.textContent = defaultBg;
+                    vaultBgDl.href = defaultBg;
+                    vaultBgDl.download = defaultBg;
+                }
             }
         });
     });
@@ -443,10 +476,12 @@ document.addEventListener('DOMContentLoaded', () => {
             inputCustomCover.value = '';
 
             // Sync Vault HUD
-            vaultCoverThumb.style.backgroundImage = `url('${coverFile}')`;
-            vaultCoverName.textContent = coverFile;
-            vaultCoverDl.href = coverFile;
-            vaultCoverDl.download = coverFile;
+            if (vaultCoverThumb) {
+                vaultCoverThumb.style.backgroundImage = `url('${coverFile}')`;
+                vaultCoverName.textContent = coverFile;
+                vaultCoverDl.href = coverFile;
+                vaultCoverDl.download = coverFile;
+            }
 
             // Apply specialized 3D book theme classes and dynamic spine text
             book3D.classList.remove('theme-dali', 'theme-bella', 'theme-blueprint', 'theme-origami');
@@ -490,10 +525,37 @@ document.addEventListener('DOMContentLoaded', () => {
             inputCustomBg.value = '';
 
             // Sync Vault HUD
-            vaultBgThumb.style.backgroundImage = `url('${bgFile}')`;
-            vaultBgName.textContent = bgFile;
-            vaultBgDl.href = bgFile;
-            vaultBgDl.download = bgFile;
+            if (vaultBgThumb) {
+                vaultBgThumb.style.backgroundImage = `url('${bgFile}')`;
+                vaultBgName.textContent = bgFile;
+                vaultBgDl.href = bgFile;
+                vaultBgDl.download = bgFile;
+            }
+        });
+    });
+
+    // Page Finish Swapper Preset Event Listeners
+    pageSwapButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const pagesFile = button.getAttribute('data-pages');
+
+            pageSwapButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Set dynamic pages edge texture
+            document.documentElement.style.setProperty('--current-pages-texture', `url('${pagesFile}')`);
+
+            // Clear custom file input if active
+            inputCustomPages.parentElement.classList.remove('has-file');
+            inputCustomPages.value = '';
+
+            // Sync Vault HUD
+            if (vaultPageThumb) {
+                vaultPageThumb.style.backgroundImage = `url('${pagesFile}')`;
+                vaultPageName.textContent = pagesFile;
+                vaultPageDl.href = pagesFile;
+                vaultPageDl.download = pagesFile;
+            }
         });
     });
 });
