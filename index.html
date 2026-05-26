@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Casa de Papel - Interactive 3D Book Mockup Studio</title>
-    <meta name="description" content="A premium 3D design studio for La Casa de Papel. Customize cover designs, page density, page finishes, and backgrounds. Inspect and download heist assets.">
+    <title>Universal 3D Book Mockup Creator & Studio</title>
+    <meta name="description" content="A premium 3D design studio to mock up any book. Upload custom covers, page textures, spines, and backgrounds. Collapsible HUD and cinematic showcase.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,18 +20,28 @@
     <!-- Background overlay for deep shadows -->
     <div class="backdrop-shadow-overlay"></div>
 
-    <div class="app-container">
+    <div class="app-container" id="app-wrapper">
+        <!-- Floating Expand Trigger (Visible when Sidebar is Collapsed) -->
+        <button id="btn-expand-sidebar" class="floating-trigger-btn" title="Expand Control Dashboard">
+            <i class="fa-solid fa-sliders"></i> Controls
+        </button>
+
         <!-- Sidebar Customizer Panel -->
-        <header class="control-panel">
+        <header class="control-panel" id="sidebar-panel">
+            <!-- Collapse Toggle Button resting on the edge -->
+            <button id="btn-collapse-sidebar" class="collapse-toggle-btn" title="Hide Sidebar Dashboard">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
             <div class="logo-area">
-                <span class="heist-badge">PLAN PARÍS</span>
-                <h1 class="main-title">LA CASA<br><span class="highlight">DE PAPEL</span></h1>
-                <p class="subtitle">3D Book Mockup Studio</p>
+                <span class="heist-badge">STUDIO WORKSPACE</span>
+                <h1 class="main-title">3D BOOK<br><span class="highlight">MOCKUPER</span></h1>
+                <p class="subtitle">Design & Showcase Studio</p>
             </div>
 
-            <!-- Customizer Controls -->
+            <!-- TAB 1: 3D VIEWPORT ADJUSTMENTS -->
             <div class="control-section">
-                <h3 class="section-title"><i class="fa-solid fa-sliders"></i> Volume Controls</h3>
+                <h3 class="section-title"><i class="fa-solid fa-sliders"></i> 3D Adjustments</h3>
                 
                 <div class="control-group">
                     <label for="thickness-slider">
@@ -51,7 +61,7 @@
                         <button class="btn-preset" data-preset="front">Front</button>
                         <button class="btn-preset active" data-preset="angle">3D Angle</button>
                         <button class="btn-preset" data-preset="spine">Spine</button>
-                        <button class="btn-preset" data-preset="pages">Pages Edge</button>
+                        <button class="btn-preset" data-preset="pages">Pages</button>
                     </div>
                 </div>
 
@@ -67,9 +77,85 @@
                 </div>
             </div>
 
-            <!-- COVER THEME SWITCHER -->
+            <!-- TAB 2: UNIVERSAL MOCKUP UPLOADER (UPLOAD YOUR OWN BOOK) -->
             <div class="control-section">
-                <h3 class="section-title"><i class="fa-solid fa-swatchbook"></i> Cover Theme</h3>
+                <h3 class="section-title"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Custom Textures</h3>
+                <p class="section-desc">Drag or select your own images to mock up any custom book.</p>
+                
+                <div class="uploader-list">
+                    <div class="upload-item">
+                        <label class="custom-file-upload">
+                            <input type="file" id="input-custom-cover" accept="image/*">
+                            <i class="fa-solid fa-file-image"></i> Front Cover
+                        </label>
+                        <button class="btn-reset-asset" data-reset="cover" title="Reset to standard cover"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <div class="upload-item">
+                        <label class="custom-file-upload">
+                            <input type="file" id="input-custom-back" accept="image/*">
+                            <i class="fa-solid fa-file-image"></i> Back Cover
+                        </label>
+                        <button class="btn-reset-asset" data-reset="back" title="Reset to standard back"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <div class="upload-item">
+                        <label class="custom-file-upload">
+                            <input type="file" id="input-custom-spine" accept="image/*">
+                            <i class="fa-solid fa-file-image"></i> Custom Spine
+                        </label>
+                        <button class="btn-reset-asset" data-reset="spine" title="Reset to dynamic spine"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <div class="upload-item">
+                        <label class="custom-file-upload">
+                            <input type="file" id="input-custom-pages" accept="image/*">
+                            <i class="fa-solid fa-file-image"></i> Page Edge Finish
+                        </label>
+                        <button class="btn-reset-asset" data-reset="pages" title="Reset to standard pages"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+
+                    <div class="upload-item">
+                        <label class="custom-file-upload">
+                            <input type="file" id="input-custom-bg" accept="image/*">
+                            <i class="fa-solid fa-image"></i> Backdrop Environment
+                        </label>
+                        <button class="btn-reset-asset" data-reset="bg" title="Reset to standard background"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: DYNAMIC SPINE CREATOR -->
+            <div class="control-section" id="spine-designer-section">
+                <h3 class="section-title"><i class="fa-solid fa-palette"></i> Dynamic Spine Designer</h3>
+                <p class="section-desc">Create a dynamic text spine if you don't have a pre-made image.</p>
+                
+                <div class="control-group">
+                    <label for="input-spine-title">Spine Title Text</label>
+                    <input type="text" id="input-spine-title" placeholder="Type title..." value="LA CASA DE PAPEL" class="text-input-field">
+                </div>
+
+                <div class="control-group">
+                    <label>Spine Background Color</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="input-spine-bg-color" value="#44070a" class="color-swatch-input">
+                        <span id="label-spine-bg-color" class="color-code-display">#44070A</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Spine Text Color</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="input-spine-text-color" value="#d4af37" class="color-swatch-input">
+                        <span id="label-spine-text-color" class="color-code-display">#D4AF37</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: MOCKUP QUICK PRESETS (HEIST SERIES) -->
+            <div class="control-section">
+                <h3 class="section-title"><i class="fa-solid fa-swatchbook"></i> Quick Heist Presets</h3>
+                <p class="section-desc">Load our custom-generated high-fidelity templates.</p>
                 <div class="swapper-grid">
                     <button class="btn-swap btn-cover active" data-cover="cover_dali.png">
                         <span class="color-dot dali-red"></span> Dalí Mask
@@ -84,27 +170,10 @@
                         <span class="color-dot origami-black"></span> Origami
                     </button>
                 </div>
-            </div>
-
-            <!-- ENVIRONMENT SWITCHER -->
-            <div class="control-section">
-                <h3 class="section-title"><i class="fa-solid fa-images"></i> Environment</h3>
-                <div class="swapper-grid">
-                    <button class="btn-swap btn-bg active" data-bg="bg_hideout.png">Hideout</button>
-                    <button class="btn-swap btn-bg" data-bg="bg_vault.png">Mint Vault</button>
-                    <button class="btn-swap btn-bg" data-bg="bg_hangar.png">Hangar</button>
-                    <button class="btn-swap btn-bg" data-bg="bg_confetti.png">Celebration</button>
-                </div>
-            </div>
-
-            <!-- PAGE TEXTURE SWITCHER -->
-            <div class="control-section">
-                <h3 class="section-title"><i class="fa-solid fa-book-open"></i> Page Finish</h3>
-                <div class="swapper-grid">
-                    <button class="btn-swap btn-page active" data-pages="pages_standard.png">Standard</button>
-                    <button class="btn-swap btn-page" data-pages="pages_vintage.png">Vintage</button>
-                    <button class="btn-swap btn-page" data-pages="pages_gilded.png">Gilded Gold</button>
-                    <button class="btn-swap btn-page" data-pages="pages_crimson.png">Red Matte</button>
+                
+                <div class="swapper-grid" style="margin-top: 10px;">
+                    <button class="btn-swap btn-bg active" data-bg="bg_hideout.png">Hideout BG</button>
+                    <button class="btn-swap btn-bg" data-bg="bg_vault.png">Vault BG</button>
                 </div>
             </div>
 
@@ -117,7 +186,7 @@
                     <div class="asset-item">
                         <div class="asset-preview-thumb cover-thumb" id="vault-cover-thumb"></div>
                         <div class="asset-info">
-                            <span class="asset-name">Cover Design</span>
+                            <span class="asset-name">Front Cover</span>
                             <span class="asset-meta" id="vault-cover-name">cover_dali.png</span>
                         </div>
                         <a href="cover_dali.png" download="cover_dali.png" class="btn-download" id="vault-cover-dl" title="Download Cover">
@@ -128,21 +197,10 @@
                     <div class="asset-item">
                         <div class="asset-preview-thumb bg-thumb" id="vault-bg-thumb"></div>
                         <div class="asset-info">
-                            <span class="asset-name">Active Backdrop</span>
+                            <span class="asset-name">Backdrop Image</span>
                             <span class="asset-meta" id="vault-bg-name">bg_hideout.png</span>
                         </div>
                         <a href="bg_hideout.png" download="bg_hideout.png" class="btn-download" id="vault-bg-dl" title="Download Backdrop">
-                            <i class="fa-solid fa-download"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="asset-item">
-                        <div class="asset-preview-thumb texture-thumb" id="vault-page-thumb"></div>
-                        <div class="asset-info">
-                            <span class="asset-name">Pages Finish</span>
-                            <span class="asset-meta" id="vault-page-name">pages_standard.png</span>
-                        </div>
-                        <a href="pages_standard.png" download="pages_standard.png" class="btn-download" id="vault-page-dl" title="Download Finish">
                             <i class="fa-solid fa-download"></i>
                         </a>
                     </div>
@@ -150,7 +208,7 @@
             </div>
 
             <footer class="panel-footer">
-                <p>Designed for La Casa de Papel Fans</p>
+                <p>Universal 3D Mockup Studio</p>
                 <p class="copyright">&copy; 2026 Litoral Studio</p>
             </footer>
         </header>
@@ -171,13 +229,13 @@
                     
                     <!-- Book Back Cover -->
                     <div class="book-face back" id="book-back">
-                        <div class="back-cover-design">
+                        <div class="back-cover-design" id="back-design-container">
                             <div class="back-logo">
                                 <i class="fa-solid fa-mask"></i>
                             </div>
                             <div class="back-text">
-                                <h2>EL PROFESOR</h2>
-                                <p>"Comienza el atraco."</p>
+                                <h2 id="back-title-text">EL PROFESOR</h2>
+                                <p id="back-quote-text">"Comienza el atraco."</p>
                             </div>
                             <div class="barcode"></div>
                         </div>
@@ -186,7 +244,7 @@
                     <!-- Book Spine -->
                     <div class="book-face spine" id="book-spine">
                         <div class="spine-content">
-                            <span class="spine-publisher">LITORAL</span>
+                            <span class="spine-publisher">MOCKUP</span>
                             <h2 class="spine-title" id="spine-title-text">LA CASA DE PAPEL</h2>
                             <span class="spine-symbol"><i class="fa-solid fa-mask"></i></span>
                         </div>

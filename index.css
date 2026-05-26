@@ -10,7 +10,7 @@
     --gold-foil-glow: rgba(212, 175, 55, 0.3);
     
     --bg-dark: #0A0A0B;
-    --panel-bg: rgba(14, 14, 16, 0.78);
+    --panel-bg: rgba(14, 14, 16, 0.82);
     --border-light: rgba(255, 255, 255, 0.06);
     --border-focus: rgba(214, 28, 42, 0.4);
     
@@ -23,13 +23,19 @@
     --book-height: 440px;
     --book-thickness: 50px;
     
-    /* DYNAMIC VARIABLES (Controlled by JavaScript Swappers) */
+    /* DYNAMIC VARIABLES (Controlled by JavaScript Swappers & File Readers) */
     --current-cover: url('cover_dali.png');
+    --current-back: none; /* Injected dynamically if custom image uploaded */
+    --current-spine: none; /* Injected dynamically if custom image uploaded */
     --current-bg: url('bg_hideout.png');
     --current-pages-texture: url('pages_standard.png');
     
+    /* Spine dynamic fallback colors */
+    --spine-bg-color: #44070a;
+    --spine-text-color: #d4af37;
+    
     /* Transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-smooth: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     --transition-snappy: all 0.2s ease-out;
 }
 
@@ -89,7 +95,7 @@ body {
 }
 
 /* ==========================================================================
-   CONTROL PANEL (SIDEBAR)
+   CONTROL PANEL (SIDEBAR) & COLLAPSIBLE HUD
    ========================================================================== */
 .control-panel {
     width: 380px;
@@ -103,6 +109,8 @@ body {
     overflow-y: auto;
     box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6);
     z-index: 100;
+    position: relative;
+    transition: var(--transition-smooth); /* Smooth slide out */
 }
 
 /* Hide scrollbars for absolute clean look */
@@ -112,6 +120,74 @@ body {
 .control-panel::-webkit-scrollbar-thumb {
     background: rgba(255,255,255,0.08);
     border-radius: 2px;
+}
+
+/* Collapsed Sidebar State */
+.control-panel.collapsed {
+    transform: translateX(-100%);
+    box-shadow: none;
+}
+
+/* Sidebar Toggle Collapser Button resting on the edge */
+.collapse-toggle-btn {
+    position: absolute;
+    top: 30px;
+    right: -18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #141416;
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.collapse-toggle-btn:hover {
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.08);
+}
+
+/* Floating Expand Trigger Button (Hidden by default, shown when collapsed) */
+.floating-trigger-btn {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 150;
+    background: rgba(14, 14, 16, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    padding: 12px 20px;
+    border-radius: 30px;
+    color: #FFFFFF;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-20px);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.floating-trigger-btn:hover {
+    background: #1E1E22;
+    border-color: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+
+.floating-trigger-btn.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
 }
 
 /* Logo & Branding */
@@ -312,6 +388,137 @@ button {
 }
 
 /* ==========================================================================
+   UNIVERSAL IMAGE UPLOADERS STYLE
+   ========================================================================== */
+.uploader-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upload-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.custom-file-upload {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border-light);
+    padding: 11px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-file-upload:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload i {
+    color: var(--gold-foil);
+    font-size: 13px;
+}
+
+.custom-file-upload.has-file {
+    border-style: solid;
+    border-color: var(--gold-foil);
+    background: rgba(212, 175, 55, 0.05);
+    color: #FFFFFF;
+}
+
+.btn-reset-asset {
+    width: 32px;
+    height: 38px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.btn-reset-asset:hover {
+    background: rgba(214, 28, 42, 0.1);
+    border-color: var(--heist-red);
+    color: var(--heist-red-hover);
+}
+
+/* ==========================================================================
+   DYNAMIC SPINE DESIGNER INPUTS
+   ========================================================================== */
+.text-input-field {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-light);
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.text-input-field:focus {
+    border-color: var(--heist-red);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.color-swatch-input {
+    -webkit-appearance: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: none;
+}
+
+.color-swatch-input::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.color-swatch-input::-webkit-color-swatch {
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+}
+
+.color-code-display {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+}
+
+/* ==========================================================================
    ASSET SWAPPER GRID & BUTTONS
    ========================================================================== */
 .swapper-grid {
@@ -394,7 +601,6 @@ button {
 
 .cover-thumb { background-image: var(--current-cover); }
 .bg-thumb { background-image: var(--current-bg); height: 32px; }
-.texture-thumb { background-image: var(--current-pages-texture); height: 32px; }
 
 .asset-info {
     flex: 1;
@@ -466,6 +672,7 @@ button {
     perspective: 1500px;
     cursor: grab;
     overflow: hidden;
+    transition: var(--transition-smooth); /* Smooth resize when sidebar collapses */
 }
 
 .viewport-area:active {
@@ -535,7 +742,7 @@ button {
     backface-visibility: visible;
 }
 
-/* FRONT COVER (Dynamic Flat Texture) */
+/* FRONT COVER */
 .book-face.front {
     width: 100%;
     height: 100%;
@@ -583,7 +790,7 @@ button {
     100% { transform: translate(30%, 30%) rotate(25deg); }
 }
 
-/* BACK COVER */
+/* BACK COVER (Supports dynamic custom texture OR custom designer layout) */
 .book-face.back {
     width: 100%;
     height: 100%;
@@ -594,6 +801,17 @@ button {
     box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.02);
     transition: var(--transition-smooth);
+    background-size: cover;
+    background-position: center;
+}
+
+.book-face.back.has-custom-back {
+    background-image: var(--current-back);
+}
+
+/* Hide fallback design container when custom image cover is loaded */
+.book-face.back.has-custom-back #back-design-container {
+    display: none;
 }
 
 .back-cover-design {
@@ -651,7 +869,7 @@ button {
     opacity: 0.6;
 }
 
-/* BOOK SPINE */
+/* BOOK SPINE (Supports dynamic custom texture OR fallback live colored spine) */
 .book-face.spine {
     width: var(--book-thickness);
     height: 100%;
@@ -660,6 +878,18 @@ button {
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     transition: var(--transition-smooth);
+    background-size: cover;
+    background-position: center;
+    background-color: var(--spine-bg-color); /* Dynamically controlled color */
+}
+
+.book-face.spine.has-custom-spine {
+    background-image: var(--current-spine);
+}
+
+/* Hide fallback content when a pre-made spine image is loaded */
+.book-face.spine.has-custom-spine .spine-content {
+    display: none;
 }
 
 .spine-content {
@@ -670,14 +900,14 @@ button {
     justify-content: space-between;
     align-items: center;
     padding: 35px 0;
-    color: var(--text-primary);
+    color: var(--spine-text-color); /* Dynamically controlled color */
 }
 
 .spine-publisher {
     font-size: 9px;
     font-weight: 800;
     letter-spacing: 2px;
-    transition: var(--transition-smooth);
+    color: var(--text-muted);
 }
 
 .spine-title {
@@ -697,7 +927,7 @@ button {
     transition: var(--transition-smooth);
 }
 
-/* PAGES EDGE (RIGHT - Dynamic Texture) */
+/* PAGES EDGE (RIGHT) */
 .book-face.pages-right {
     width: var(--book-thickness);
     height: calc(100% - 6px);
@@ -714,7 +944,7 @@ button {
     transition: background-image 0.5s ease;
 }
 
-/* PAGES TOP & BOTTOM (Universal standard gradients matching pages) */
+/* PAGES TOP & BOTTOM */
 .book-face.pages-top {
     width: calc(var(--book-width) - 6px);
     height: var(--book-thickness);
@@ -752,14 +982,14 @@ button {
 }
 
 /* ==========================================================================
-   DYNAMIC COMPONENT CLASS THEMES (Controlled by active cover theme in JS)
+   DYNAMIC COMPONENT CLASS THEMES
    ========================================================================== */
    
-/* Theme 1: Dalí Mask (Heist Crimson Red Theme) */
-.theme-dali .book-face.spine {
+/* Theme 1: Dalí Mask */
+.theme-dali .book-face.spine:not(.has-custom-spine) {
     background: linear-gradient(to right, #0F0F10 0%, #1C0305 30%, #44070A 50%, #1C0305 70%, #0F0F10 100%);
 }
-.theme-dali .spine-title { color: var(--gold-foil); }
+.theme-dali .spine-content { --spine-text-color: var(--gold-foil); }
 .theme-dali .spine-publisher { color: var(--text-muted); }
 .theme-dali .spine-symbol { color: var(--heist-red); text-shadow: 0 0 8px var(--heist-red-glow); }
 .theme-dali .back-cover-design {
@@ -768,11 +998,11 @@ button {
 .theme-dali .back-logo { color: rgba(214, 28, 42, 0.18); }
 .theme-dali .back-text h2 { color: var(--gold-foil); }
 
-/* Theme 2: Bella Ciao (Aged Sepia Grunge Theme) */
-.theme-bella .book-face.spine {
+/* Theme 2: Bella Ciao */
+.theme-bella .book-face.spine:not(.has-custom-spine) {
     background: linear-gradient(to right, #1E1912 0%, #2D251A 30%, #3D3325 50%, #2D251A 70%, #1E1912 100%);
 }
-.theme-bella .spine-title { color: #D61C2A; font-family: 'Cinzel', serif; }
+.theme-bella .spine-content { --spine-text-color: #D61C2A; }
 .theme-bella .spine-publisher { color: #8F7B64; }
 .theme-bella .spine-symbol { color: #D61C2A; }
 .theme-bella .back-cover-design {
@@ -781,11 +1011,12 @@ button {
 .theme-bella .back-logo { color: rgba(214, 28, 42, 0.12); }
 .theme-bella .back-text h2 { color: #B88E6D; }
 
-/* Theme 3: Blueprint (Cyan Technical Vault Theme) */
-.theme-blueprint .book-face.spine {
+/* Theme 3: Blueprint */
+.theme-blueprint .book-face.spine:not(.has-custom-spine) {
     background: linear-gradient(to right, #050E1A 0%, #0D233D 30%, #15365A 50%, #0D233D 70%, #050E1A 100%);
 }
-.theme-blueprint .spine-title { color: #00B4D8; font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 4px; }
+.theme-blueprint .spine-content { --spine-text-color: #00B4D8; }
+.theme-blueprint .spine-title { font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 4px; }
 .theme-blueprint .spine-publisher { color: #4B6E96; }
 .theme-blueprint .spine-symbol { color: #00B4D8; text-shadow: 0 0 10px rgba(0, 180, 216, 0.5); }
 .theme-blueprint .back-cover-design {
@@ -795,13 +1026,14 @@ button {
 .theme-blueprint .back-logo { color: rgba(0, 180, 216, 0.1); }
 .theme-blueprint .back-text h2 { color: #00B4D8; }
 
-/* Theme 4: Origami (Deep Velvet Minimal Charcoal Theme) */
-.theme-origami .book-face.spine {
+/* Theme 4: Origami */
+.theme-origami .book-face.spine:not(.has-custom-spine) {
     background: linear-gradient(to right, #080808 0%, #131313 40%, #1C1C1C 50%, #131313 60%, #080808 100%);
 }
-.theme-origami .spine-title { color: #D61C2A; font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 5px; }
+.theme-origami .spine-content { --spine-text-color: #FFFFFF; }
+.theme-origami .spine-title { font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 5px; }
 .theme-origami .spine-publisher { color: #555555; }
-.theme-origami .spine-symbol { color: #FFFFFF; }
+.theme-origami .spine-symbol { color: #D61C2A; }
 .theme-origami .back-cover-design {
     background: linear-gradient(135deg, #0A0A0A 0%, #121212 100%);
 }
@@ -845,6 +1077,32 @@ button {
         height: auto;
         padding: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .control-panel.collapsed {
+        transform: translateY(-100%);
+    }
+    
+    .collapse-toggle-btn {
+        right: auto;
+        bottom: -18px;
+        top: auto;
+        left: calc(50% - 18px);
+        transform: rotate(90deg);
+    }
+    
+    .collapse-toggle-btn:hover {
+        transform: rotate(90deg) scale(1.08);
+    }
+    
+    .floating-trigger-btn {
+        top: 20px;
+        left: calc(50% - 70px);
+        transform: translateY(-20px);
+    }
+    
+    .floating-trigger-btn.visible {
+        transform: translateY(0);
     }
     
     .viewport-area {
