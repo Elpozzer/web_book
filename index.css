@@ -934,17 +934,30 @@ button {
     left: calc(50% - var(--book-thickness) / 2);
     top: 3px;
     transform: rotateY(90deg) translateZ(calc(var(--book-width) / 2 - 3px));
-    background-image: var(--current-pages-texture);
-    background-size: cover;
-    background-position: center;
     box-shadow: 
         inset 5px 0 10px rgba(0, 0, 0, 0.25),
         inset -5px 0 10px rgba(0, 0, 0, 0.25);
     filter: brightness(0.92) contrast(1.05);
+    overflow: hidden;
+    position: absolute;
+}
+
+/* Rotates the vertical page texture 90 degrees to run horizontally (front cover to back cover) */
+.book-face.pages-right::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 220px); /* Centered vertically (H=440px / 2) */
+    left: calc(50% - 220px); /* Centered horizontally */
+    width: 440px; /* H */
+    height: 440px; /* H */
+    background-image: var(--current-pages-texture);
+    background-size: cover;
+    background-position: center;
+    transform: rotate(90deg);
     transition: background-image 0.5s ease;
 }
 
-/* PAGES TOP & BOTTOM */
+/* PAGES TOP */
 .book-face.pages-top {
     width: calc(var(--book-width) - 6px);
     height: var(--book-thickness);
@@ -952,7 +965,7 @@ button {
     top: calc(50% - var(--book-thickness) / 2);
     transform: rotateX(90deg) translateZ(calc(var(--book-height) / 2 - 3px));
     background: repeating-linear-gradient(
-        90deg, 
+        0deg, 
         #D2C9B9, 
         #D2C9B9 1px, 
         #DFD8CB 2px, 
@@ -963,6 +976,7 @@ button {
         inset 0 -5px 10px rgba(0,0,0,0.2);
 }
 
+/* PAGES BOTTOM */
 .book-face.pages-bottom {
     width: calc(var(--book-width) - 6px);
     height: var(--book-thickness);
@@ -970,7 +984,7 @@ button {
     top: calc(50% - var(--book-thickness) / 2);
     transform: rotateX(-90deg) translateZ(calc(var(--book-height) / 2 - 3px));
     background: repeating-linear-gradient(
-        90deg, 
+        0deg, 
         #C0B7A6, 
         #C0B7A6 1px, 
         #D2C9B9 2px, 
