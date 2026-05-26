@@ -10,7 +10,7 @@
     --gold-foil-glow: rgba(212, 175, 55, 0.3);
     
     --bg-dark: #0A0A0B;
-    --panel-bg: rgba(14, 14, 16, 0.75);
+    --panel-bg: rgba(14, 14, 16, 0.78);
     --border-light: rgba(255, 255, 255, 0.06);
     --border-focus: rgba(214, 28, 42, 0.4);
     
@@ -21,7 +21,12 @@
     /* Layout Dimensions */
     --book-width: 300px;
     --book-height: 440px;
-    --book-thickness: 50px; /* Overwritten dynamically by JS */
+    --book-thickness: 50px;
+    
+    /* DYNAMIC VARIABLES (Controlled by JavaScript Swappers) */
+    --current-cover: url('cover_dali.png');
+    --current-bg: url('bg_hideout.png');
+    --current-pages-texture: url('pages_standard.png');
     
     /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -54,12 +59,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('mockup_background.png');
+    background-image: var(--current-bg);
     background-size: cover;
     background-position: center;
-    filter: brightness(0.65) contrast(1.1) saturate(0.9) blur(1px);
+    filter: brightness(0.55) contrast(1.1) saturate(0.8) blur(1px);
     z-index: -2;
-    transition: var(--transition-smooth);
+    transition: background-image 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .backdrop-shadow-overlay {
@@ -68,7 +73,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 60% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 80%);
+    background: radial-gradient(circle at 60% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.85) 85%);
     z-index: -1;
 }
 
@@ -90,20 +95,28 @@ body {
     width: 380px;
     height: 100%;
     background: var(--panel-bg);
-    backdrop-filter: blur(24px) saturate(120%);
+    backdrop-filter: blur(28px) saturate(120%);
     border-right: 1px solid var(--border-light);
-    padding: 40px 30px;
+    padding: 30px 25px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     overflow-y: auto;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6);
     z-index: 100;
+}
+
+/* Hide scrollbars for absolute clean look */
+.control-panel::-webkit-scrollbar {
+    width: 4px;
+}
+.control-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
 }
 
 /* Logo & Branding */
 .logo-area {
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
 .heist-badge {
@@ -116,13 +129,13 @@ body {
     border-radius: 3px;
     text-transform: uppercase;
     display: inline-block;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     box-shadow: 0 0 10px var(--heist-red-glow);
 }
 
 .main-title {
     font-family: 'Cinzel', serif;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: 1px;
@@ -131,32 +144,32 @@ body {
 
 .main-title .highlight {
     color: var(--heist-red);
-    text-shadow: 0 0 15px rgba(214, 28, 42, 0.3);
+    text-shadow: 0 0 15px rgba(214, 28, 42, 0.35);
 }
 
 .subtitle {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
-    margin-top: 6px;
+    margin-top: 4px;
     letter-spacing: 0.5px;
 }
 
 /* Control Sections */
 .control-section {
     border-top: 1px solid var(--border-light);
-    padding: 30px 0;
+    padding: 24px 0;
 }
 
 .section-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: #FFFFFF;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .section-title i {
@@ -164,28 +177,25 @@ body {
 }
 
 .section-desc {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-secondary);
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    line-height: 1.4;
 }
 
 /* Interactive Groups */
 .control-group {
-    margin-bottom: 25px;
-}
-
-.control-group:last-child {
-    margin-bottom: 0;
+    margin-bottom: 20px;
 }
 
 .control-group label {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -195,49 +205,49 @@ body {
     color: var(--gold-foil);
     padding: 2px 8px;
     border-radius: 10px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
 }
 
-/* Custom Styled Range Input */
+/* Custom Range Input */
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
-    height: 6px;
+    height: 5px;
     border-radius: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     outline: none;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: var(--heist-red);
     cursor: pointer;
-    box-shadow: 0 0 10px var(--heist-red-glow);
+    box-shadow: 0 0 8px var(--heist-red-glow);
     transition: var(--transition-snappy);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
     background: var(--heist-red-hover);
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 
 .slider-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-muted);
 }
 
 /* Button Layouts */
 .toggle-container {
     display: flex;
-    gap: 12px;
+    gap: 10px;
 }
 
 button {
@@ -246,15 +256,15 @@ button {
     outline: none;
     border-radius: 6px;
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     transition: var(--transition-smooth);
 }
 
 .btn-toggle {
     flex: 1;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.04);
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
     color: var(--text-secondary);
 }
 
@@ -262,11 +272,11 @@ button {
     background: var(--heist-red);
     color: #FFFFFF;
     border-color: var(--heist-red);
-    box-shadow: 0 0 15px var(--heist-red-glow);
+    box-shadow: 0 0 12px var(--heist-red-glow);
 }
 
 .btn-secondary {
-    padding: 12px 18px;
+    padding: 10px 14px;
     background: transparent;
     color: var(--text-secondary);
 }
@@ -279,18 +289,19 @@ button {
 
 .preset-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
 }
 
 .btn-preset {
-    padding: 10px;
+    padding: 8px 4px;
     background: rgba(255, 255, 255, 0.03);
     color: var(--text-secondary);
+    font-size: 10px;
 }
 
 .btn-preset:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     color: #FFFFFF;
 }
 
@@ -300,11 +311,60 @@ button {
     background: rgba(212, 175, 55, 0.05);
 }
 
-/* Asset Vault Items */
+/* ==========================================================================
+   ASSET SWAPPER GRID & BUTTONS
+   ========================================================================== */
+.swapper-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.btn-swap {
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-secondary);
+    padding: 11px 8px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    border: 1px solid var(--border-light);
+}
+
+.btn-swap:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-swap.active {
+    border-color: var(--heist-red);
+    background: rgba(214, 28, 42, 0.08);
+    color: #FFFFFF;
+    box-shadow: inset 0 0 8px rgba(214, 28, 42, 0.15);
+}
+
+/* Color dot theme indicators */
+.color-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dali-red { background: #E50914; box-shadow: 0 0 6px rgba(229, 9, 20, 0.7); }
+.bella-grunge { background: #B88E6D; box-shadow: 0 0 6px rgba(184, 142, 109, 0.7); }
+.mint-blue { background: #00B4D8; box-shadow: 0 0 6px rgba(0, 180, 216, 0.7); }
+.origami-black { background: #FFFFFF; box-shadow: 0 0 6px rgba(255, 255, 255, 0.7); }
+
+/* ==========================================================================
+   ASSET VAULT ITEMS
+   ========================================================================== */
 .asset-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .asset-item {
@@ -313,44 +373,45 @@ button {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-light);
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 8px 10px;
     transition: var(--transition-smooth);
 }
 
 .asset-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
 }
 
 .asset-preview-thumb {
-    width: 36px;
-    height: 48px;
+    width: 32px;
+    height: 42px;
     border-radius: 4px;
     background-size: cover;
     background-position: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-image 0.5s ease;
 }
 
-.cover-thumb { background-image: url('la_casa_de_papel_cover.png'); }
-.bg-thumb { background-image: url('mockup_background.png'); height: 36px; }
-.texture-thumb { background-image: url('book_pages_texture.png'); height: 36px; }
+.cover-thumb { background-image: var(--current-cover); }
+.bg-thumb { background-image: var(--current-bg); height: 32px; }
+.texture-thumb { background-image: var(--current-pages-texture); height: 32px; }
 
 .asset-info {
     flex: 1;
-    margin-left: 12px;
+    margin-left: 10px;
     display: flex;
     flex-direction: column;
     min-width: 0;
 }
 
 .asset-name {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #FFFFFF;
 }
 
 .asset-meta {
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-muted);
     text-overflow: ellipsis;
     overflow: hidden;
@@ -358,10 +419,10 @@ button {
 }
 
 .btn-download {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-light);
     color: var(--text-secondary);
     display: flex;
@@ -381,14 +442,15 @@ button {
 /* Footer panel */
 .panel-footer {
     border-top: 1px solid var(--border-light);
-    padding-top: 20px;
-    font-size: 11px;
+    padding-top: 15px;
+    font-size: 10px;
     color: var(--text-muted);
     text-align: center;
+    margin-top: auto;
 }
 
 .panel-footer .copyright {
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 /* ==========================================================================
@@ -413,18 +475,18 @@ button {
 /* Hint HUD */
 .drag-hint {
     position: absolute;
-    top: 40px;
-    right: 40px;
-    background: rgba(0, 0, 0, 0.6);
+    top: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.65);
     border: 1px solid var(--border-light);
     backdrop-filter: blur(8px);
-    padding: 10px 18px;
+    padding: 8px 14px;
     border-radius: 30px;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     pointer-events: none;
     letter-spacing: 0.5px;
     animation: pulseHint 3s infinite ease-in-out;
@@ -444,7 +506,7 @@ button {
     position: relative;
     transform-style: preserve-3d;
     z-index: 5;
-    transition: transform 0.1s ease-out; /* Smooth custom dragging */
+    transition: transform 0.1s ease-out;
 }
 
 .book-mockup {
@@ -460,17 +522,10 @@ button {
     animation: floatAndRotate 18s infinite linear;
 }
 
-/* Floating animation */
 @keyframes floatAndRotate {
-    0% {
-        transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg) translateY(0px);
-    }
-    50% {
-        transform: rotateX(24deg) rotateY(180deg) rotateZ(-1deg) translateY(-15px);
-    }
-    100% {
-        transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg) translateY(0px);
-    }
+    0% { transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg) translateY(0px); }
+    50% { transform: rotateX(24deg) rotateY(180deg) rotateZ(-1deg) translateY(-12px); }
+    100% { transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg) translateY(0px); }
 }
 
 /* Base Face Style */
@@ -480,13 +535,13 @@ button {
     backface-visibility: visible;
 }
 
-/* FRONT COVER */
+/* FRONT COVER (Dynamic Flat Texture) */
 .book-face.front {
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    background-image: url('la_casa_de_papel_cover.png');
+    background-image: var(--current-cover);
     background-size: cover;
     background-position: center;
     border-radius: 2px 6px 6px 2px;
@@ -495,6 +550,7 @@ button {
         0 0 10px rgba(0, 0, 0, 0.4),
         inset -5px 0 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    transition: background-image 0.5s ease;
 }
 
 /* Gold foil dynamic sheen overlay */
@@ -533,11 +589,11 @@ button {
     height: 100%;
     left: 0;
     top: 0;
-    background: #141416;
     border-radius: 6px 2px 2px 6px;
     transform: rotateY(180deg) translateZ(calc(var(--book-thickness) / 2));
     box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.02);
+    transition: var(--transition-smooth);
 }
 
 .back-cover-design {
@@ -549,25 +605,14 @@ button {
     justify-content: space-between;
     align-items: center;
     border-radius: 6px;
-    background: linear-gradient(135deg, #101011 0%, #161619 100%);
     position: relative;
     overflow: hidden;
-}
-
-.back-cover-design::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(214, 28, 42, 0.05) 0%, transparent 70%);
-    pointer-events: none;
+    background: #141416;
 }
 
 .back-logo {
     font-size: 56px;
-    color: rgba(214, 28, 42, 0.2);
+    transition: var(--transition-smooth);
 }
 
 .back-text {
@@ -576,10 +621,10 @@ button {
 
 .back-text h2 {
     font-family: 'Cinzel', serif;
-    color: var(--gold-foil);
     font-size: 20px;
     letter-spacing: 2px;
     margin-bottom: 12px;
+    transition: var(--transition-smooth);
 }
 
 .back-text p {
@@ -612,9 +657,9 @@ button {
     height: 100%;
     left: calc(50% - var(--book-thickness) / 2);
     transform: rotateY(-90deg) translateZ(calc(var(--book-width) / 2));
-    background: linear-gradient(to right, #0F0F10 0%, #1C0305 30%, #44070A 50%, #1C0305 70%, #0F0F10 100%);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
     overflow: hidden;
+    transition: var(--transition-smooth);
 }
 
 .spine-content {
@@ -632,44 +677,44 @@ button {
     font-size: 9px;
     font-weight: 800;
     letter-spacing: 2px;
-    color: var(--text-muted);
+    transition: var(--transition-smooth);
 }
 
 .spine-title {
     font-family: 'Cinzel', serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--gold-foil);
     writing-mode: vertical-rl;
     text-orientation: mixed;
     transform: rotate(180deg);
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: var(--transition-smooth);
 }
 
 .spine-symbol {
     font-size: 14px;
-    color: var(--heist-red);
-    text-shadow: 0 0 8px var(--heist-red-glow);
+    transition: var(--transition-smooth);
 }
 
-/* PAGES EDGE (RIGHT) */
+/* PAGES EDGE (RIGHT - Dynamic Texture) */
 .book-face.pages-right {
     width: var(--book-thickness);
     height: calc(100% - 6px);
     left: calc(50% - var(--book-thickness) / 2);
     top: 3px;
     transform: rotateY(90deg) translateZ(calc(var(--book-width) / 2 - 3px));
-    background-image: url('book_pages_texture.png');
+    background-image: var(--current-pages-texture);
     background-size: cover;
     background-position: center;
     box-shadow: 
         inset 5px 0 10px rgba(0, 0, 0, 0.25),
         inset -5px 0 10px rgba(0, 0, 0, 0.25);
     filter: brightness(0.92) contrast(1.05);
+    transition: background-image 0.5s ease;
 }
 
-/* PAGES TOP */
+/* PAGES TOP & BOTTOM (Universal standard gradients matching pages) */
 .book-face.pages-top {
     width: calc(var(--book-width) - 6px);
     height: var(--book-thickness);
@@ -688,7 +733,6 @@ button {
         inset 0 -5px 10px rgba(0,0,0,0.2);
 }
 
-/* PAGES BOTTOM */
 .book-face.pages-bottom {
     width: calc(var(--book-width) - 6px);
     height: var(--book-thickness);
@@ -706,6 +750,64 @@ button {
         inset 0 5px 10px rgba(0,0,0,0.25),
         inset 0 -5px 10px rgba(0,0,0,0.25);
 }
+
+/* ==========================================================================
+   DYNAMIC COMPONENT CLASS THEMES (Controlled by active cover theme in JS)
+   ========================================================================== */
+   
+/* Theme 1: Dalí Mask (Heist Crimson Red Theme) */
+.theme-dali .book-face.spine {
+    background: linear-gradient(to right, #0F0F10 0%, #1C0305 30%, #44070A 50%, #1C0305 70%, #0F0F10 100%);
+}
+.theme-dali .spine-title { color: var(--gold-foil); }
+.theme-dali .spine-publisher { color: var(--text-muted); }
+.theme-dali .spine-symbol { color: var(--heist-red); text-shadow: 0 0 8px var(--heist-red-glow); }
+.theme-dali .back-cover-design {
+    background: linear-gradient(135deg, #101011 0%, #1A0406 100%);
+}
+.theme-dali .back-logo { color: rgba(214, 28, 42, 0.18); }
+.theme-dali .back-text h2 { color: var(--gold-foil); }
+
+/* Theme 2: Bella Ciao (Aged Sepia Grunge Theme) */
+.theme-bella .book-face.spine {
+    background: linear-gradient(to right, #1E1912 0%, #2D251A 30%, #3D3325 50%, #2D251A 70%, #1E1912 100%);
+}
+.theme-bella .spine-title { color: #D61C2A; font-family: 'Cinzel', serif; }
+.theme-bella .spine-publisher { color: #8F7B64; }
+.theme-bella .spine-symbol { color: #D61C2A; }
+.theme-bella .back-cover-design {
+    background: linear-gradient(135deg, #1C1813 0%, #2A2117 100%);
+}
+.theme-bella .back-logo { color: rgba(214, 28, 42, 0.12); }
+.theme-bella .back-text h2 { color: #B88E6D; }
+
+/* Theme 3: Blueprint (Cyan Technical Vault Theme) */
+.theme-blueprint .book-face.spine {
+    background: linear-gradient(to right, #050E1A 0%, #0D233D 30%, #15365A 50%, #0D233D 70%, #050E1A 100%);
+}
+.theme-blueprint .spine-title { color: #00B4D8; font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 4px; }
+.theme-blueprint .spine-publisher { color: #4B6E96; }
+.theme-blueprint .spine-symbol { color: #00B4D8; text-shadow: 0 0 10px rgba(0, 180, 216, 0.5); }
+.theme-blueprint .back-cover-design {
+    background: linear-gradient(135deg, #040A12 0%, #0C1E33 100%);
+    border: 1px solid rgba(0, 180, 216, 0.15);
+}
+.theme-blueprint .back-logo { color: rgba(0, 180, 216, 0.1); }
+.theme-blueprint .back-text h2 { color: #00B4D8; }
+
+/* Theme 4: Origami (Deep Velvet Minimal Charcoal Theme) */
+.theme-origami .book-face.spine {
+    background: linear-gradient(to right, #080808 0%, #131313 40%, #1C1C1C 50%, #131313 60%, #080808 100%);
+}
+.theme-origami .spine-title { color: #D61C2A; font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 5px; }
+.theme-origami .spine-publisher { color: #555555; }
+.theme-origami .spine-symbol { color: #FFFFFF; }
+.theme-origami .back-cover-design {
+    background: linear-gradient(135deg, #0A0A0A 0%, #121212 100%);
+}
+.theme-origami .back-logo { color: rgba(255, 255, 255, 0.05); }
+.theme-origami .back-text h2 { color: #FFFFFF; }
+
 
 /* ==========================================================================
    AMBIENT SHADOW FLOOR
@@ -741,7 +843,7 @@ button {
     .control-panel {
         width: 100%;
         height: auto;
-        padding: 30px;
+        padding: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     
@@ -771,10 +873,10 @@ button {
     }
     
     .control-panel {
-        padding: 20px;
+        padding: 15px;
     }
     
     .main-title {
-        font-size: 26px;
+        font-size: 24px;
     }
 }

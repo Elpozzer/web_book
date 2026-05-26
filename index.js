@@ -2,18 +2,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const bookViewport = document.getElementById('book-viewport');
     const book3D = document.getElementById('book-3d');
+    const spineTitleText = document.getElementById('spine-title-text');
     const thicknessSlider = document.getElementById('thickness-slider');
     const pageCountDisplay = document.getElementById('page-count-display');
     const btnSpinToggle = document.getElementById('btn-spin-toggle');
     const btnResetView = document.getElementById('btn-reset-view');
     const presetButtons = document.querySelectorAll('.btn-preset');
+    
+    // Swappers DOM
+    const coverSwapButtons = document.querySelectorAll('.btn-cover');
+    const bgSwapButtons = document.querySelectorAll('.btn-bg');
+    const pageSwapButtons = document.querySelectorAll('.btn-page');
+
+    // Asset Vault HUD DOM
+    const vaultCoverThumb = document.getElementById('vault-cover-thumb');
+    const vaultCoverName = document.getElementById('vault-cover-name');
+    const vaultCoverDl = document.getElementById('vault-cover-dl');
+
+    const vaultBgThumb = document.getElementById('vault-bg-thumb');
+    const vaultBgName = document.getElementById('vault-bg-name');
+    const vaultBgDl = document.getElementById('vault-bg-dl');
+
+    const vaultPageThumb = document.getElementById('vault-page-thumb');
+    const vaultPageName = document.getElementById('vault-page-name');
+    const vaultPageDl = document.getElementById('vault-page-dl');
 
     // State Variables
     let isDragging = false;
     let isAutoSpinning = true;
     let startX, startY;
     
-    // Initial rotations (matching the 3D Angle CSS default)
+    // Initial rotations (matching 3D Angle preset)
     let rotX = 25;
     let rotY = -35;
     
@@ -21,8 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const minRotX = -60;
     const maxRotX = 60;
 
-    // Apply auto-spin on start
+    // Apply auto-spin and default theme on start
     book3D.classList.add('auto-spin');
+    book3D.classList.add('theme-dali');
 
     /* ==========================================================================
        AUTO-SPIN CONTROL
@@ -32,12 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (active) {
             book3D.classList.add('auto-spin');
             btnSpinToggle.classList.add('active');
-            // Remove style transform so the keyframe animation takes full control
             book3D.style.transform = '';
         } else {
             book3D.classList.remove('auto-spin');
             btnSpinToggle.classList.remove('active');
-            // Sync values from current CSS transform matrix or fallback to last known
             updateBookTransform();
         }
     }
@@ -53,35 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
         book3D.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
     }
 
-    // Capture the current angle of rotation in case we are stopping mid-animation
-    function captureCurrentRotation() {
-        const computedStyle = window.getComputedStyle(book3D);
-        const matrix = computedStyle.transform;
-        
-        if (matrix && matrix !== 'none') {
-            // Basic matrix decomposition to get angles (approximate)
-            const values = matrix.split('(')[1].split(')')[0].split(',');
-            // If it is a 3D matrix (has 16 elements)
-            if (values.length === 16) {
-                // For simplicity, we preserve our last dragged angles if available,
-                // or fall back to standard coordinates. Capture allows continuous drag from release.
-            }
-        }
-    }
-
     // Mouse Down
     bookViewport.addEventListener('mousedown', (e) => {
         isDragging = true;
         bookViewport.style.cursor = 'grabbing';
         
         if (isAutoSpinning) {
-            captureCurrentRotation();
             setAutoSpin(false);
         }
         
-        // Remove animation transition during drag for real-time response
         book3D.style.transition = 'none';
-        
         startX = e.clientX;
         startY = e.clientY;
     });
@@ -93,11 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
 
-        // Scale factors to make rotation feel smooth and matching hand movement
         rotY += deltaX * 0.5;
         rotX -= deltaY * 0.5;
-
-        // Apply bounds to vertical axis so we don't flip upside down
         rotX = Math.max(minRotX, Math.min(maxRotX, rotX));
 
         updateBookTransform();
@@ -111,11 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging) return;
         isDragging = false;
         bookViewport.style.cursor = 'grab';
-        
-        // Re-enable smooth transition for other programmatic movements
         book3D.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
-        
-        // Sync preset buttons (none of them matches exactly anymore)
         clearActivePresets();
     });
 
@@ -125,11 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bookViewport.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
             isDragging = true;
-            
-            if (isAutoSpinning) {
-                setAutoSpin(false);
-            }
-            
+            if (isAutoSpinning) setAutoSpin(false);
             book3D.style.transition = 'none';
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
@@ -164,11 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================================== */
     thicknessSlider.addEventListener('input', (e) => {
         const thickness = e.target.value;
-        
-        // Update CSS variable
         book3D.style.setProperty('--book-thickness', `${thickness}px`);
-        
-        // Update human readable page count (e.g. 50px thickness = 500 pages)
         const pageCount = thickness * 10;
         pageCountDisplay.textContent = `${pageCount} Pages`;
     });
@@ -186,37 +170,24 @@ document.addEventListener('DOMContentLoaded', () => {
             
             clearActivePresets();
             button.classList.add('active');
-            
-            // Stop auto spinning to look at a static preset
             setAutoSpin(false);
             
-            // Apply standard CSS transitions for smooth camera fly-to
             book3D.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
             
             switch(preset) {
                 case 'front':
-                    rotX = 0;
-                    rotY = 0;
-                    break;
+                    rotX = 0; rotY = 0; break;
                 case 'angle':
-                    rotX = 25;
-                    rotY = -35;
-                    break;
+                    rotX = 25; rotY = -35; break;
                 case 'spine':
-                    rotX = 0;
-                    rotY = 90;
-                    break;
+                    rotX = 0; rotY = 90; break;
                 case 'pages':
-                    rotX = 0;
-                    rotY = -90;
-                    break;
+                    rotX = 0; rotY = -90; break;
             }
-            
             updateBookTransform();
         });
     });
 
-    // Reset View Button
     btnResetView.addEventListener('click', () => {
         clearActivePresets();
         const anglePresetBtn = Array.from(presetButtons).find(btn => btn.getAttribute('data-preset') === 'angle');
@@ -228,5 +199,86 @@ document.addEventListener('DOMContentLoaded', () => {
         rotX = 25;
         rotY = -35;
         updateBookTransform();
+    });
+
+    /* ==========================================================================
+       REAL-TIME ASSET CUSTOMIZATION SWAPPERS
+       ========================================================================== */
+
+    // 1. Cover Swapper
+    coverSwapButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const coverFile = button.getAttribute('data-cover');
+            
+            // Toggle Button class
+            coverSwapButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Apply CSS Variable
+            document.documentElement.style.setProperty('--current-cover', `url('${coverFile}')`);
+
+            // Sync Vault HUD
+            vaultCoverThumb.style.backgroundImage = `url('${coverFile}')`;
+            vaultCoverName.textContent = coverFile;
+            vaultCoverDl.href = coverFile;
+            vaultCoverDl.download = coverFile;
+
+            // Apply specialized 3D book theme classes and dynamic spine text
+            book3D.classList.remove('theme-dali', 'theme-bella', 'theme-blueprint', 'theme-origami');
+            
+            if (coverFile === 'cover_dali.png') {
+                book3D.classList.add('theme-dali');
+                spineTitleText.textContent = 'LA CASA DE PAPEL';
+            } else if (coverFile === 'cover_bella.png') {
+                book3D.classList.add('theme-bella');
+                spineTitleText.textContent = 'BELLA CIAO';
+            } else if (coverFile === 'cover_blueprint.png') {
+                book3D.classList.add('theme-blueprint');
+                spineTitleText.textContent = 'PLAN DE ESCAPE';
+            } else if (coverFile === 'cover_origami.png') {
+                book3D.classList.add('theme-origami');
+                spineTitleText.textContent = 'EL PROFESOR';
+            }
+        });
+    });
+
+    // 2. Background Environment Swapper
+    bgSwapButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const bgFile = button.getAttribute('data-bg');
+
+            // Toggle Button class
+            bgSwapButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Apply CSS Variable (triggering transition)
+            document.documentElement.style.setProperty('--current-bg', `url('${bgFile}')`);
+
+            // Sync Vault HUD
+            vaultBgThumb.style.backgroundImage = `url('${bgFile}')`;
+            vaultBgName.textContent = bgFile;
+            vaultBgDl.href = bgFile;
+            vaultBgDl.download = bgFile;
+        });
+    });
+
+    // 3. Page Finish Swapper
+    pageSwapButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const pagesFile = button.getAttribute('data-pages');
+
+            // Toggle Button class
+            pageSwapButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Apply CSS Variable
+            document.documentElement.style.setProperty('--current-pages-texture', `url('${pagesFile}')`);
+
+            // Sync Vault HUD
+            vaultPageThumb.style.backgroundImage = `url('${pagesFile}')`;
+            vaultPageName.textContent = pagesFile;
+            vaultPageDl.href = pagesFile;
+            vaultPageDl.download = pagesFile;
+        });
     });
 });
