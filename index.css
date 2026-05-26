@@ -940,20 +940,10 @@ button {
     filter: brightness(0.92) contrast(1.05);
     overflow: hidden;
     position: absolute;
-}
-
-/* Rotates the vertical page texture 90 degrees to run horizontally (front cover to back cover) */
-.book-face.pages-right::before {
-    content: "";
-    position: absolute;
-    top: calc(50% - 220px); /* Centered vertically (H=440px / 2) */
-    left: calc(50% - 220px); /* Centered horizontally */
-    width: 440px; /* H */
-    height: 440px; /* H */
+    /* Direct texture with no rotation. Vertical lines go straight along the book length (comprimento) */
     background-image: var(--current-pages-texture);
     background-size: cover;
     background-position: center;
-    transform: rotate(90deg);
     transition: background-image 0.5s ease;
 }
 
@@ -964,16 +954,27 @@ button {
     left: 3px;
     top: calc(50% - var(--book-thickness) / 2);
     transform: rotateX(90deg) translateZ(calc(var(--book-height) / 2 - 3px));
-    background: repeating-linear-gradient(
-        0deg, 
-        #D2C9B9, 
-        #D2C9B9 1px, 
-        #DFD8CB 2px, 
-        #EAE5DA 3px
-    );
     box-shadow: 
         inset 0 5px 10px rgba(0,0,0,0.2),
         inset 0 -5px 10px rgba(0,0,0,0.2);
+    filter: brightness(0.92) contrast(1.05);
+    overflow: hidden;
+    position: absolute;
+}
+
+/* Rotates the vertical page texture 90 degrees to run horizontally along the book width (largura) */
+.book-face.pages-top::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 147px); /* Centered vertically (W=294px / 2) */
+    left: calc(50% - 147px); /* Centered horizontally */
+    width: 294px; /* W */
+    height: 294px; /* W */
+    background-image: var(--current-pages-texture);
+    background-size: cover;
+    background-position: center;
+    transform: rotate(90deg);
+    transition: background-image 0.5s ease;
 }
 
 /* PAGES BOTTOM */
@@ -983,16 +984,27 @@ button {
     left: 3px;
     top: calc(50% - var(--book-thickness) / 2);
     transform: rotateX(-90deg) translateZ(calc(var(--book-height) / 2 - 3px));
-    background: repeating-linear-gradient(
-        0deg, 
-        #C0B7A6, 
-        #C0B7A6 1px, 
-        #D2C9B9 2px, 
-        #DFD8CB 3px
-    );
     box-shadow: 
         inset 0 5px 10px rgba(0,0,0,0.25),
         inset 0 -5px 10px rgba(0,0,0,0.25);
+    filter: brightness(0.92) contrast(1.05);
+    overflow: hidden;
+    position: absolute;
+}
+
+/* Rotates the vertical page texture 90 degrees to run horizontally along the book width (largura) */
+.book-face.pages-bottom::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 147px);
+    left: calc(50% - 147px);
+    width: 294px;
+    height: 294px;
+    background-image: var(--current-pages-texture);
+    background-size: cover;
+    background-position: center;
+    transform: rotate(90deg);
+    transition: background-image 0.5s ease;
 }
 
 /* ==========================================================================
