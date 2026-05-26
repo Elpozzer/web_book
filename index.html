@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Casa de Papel - Interactive 3D Book Mockup</title>
+    <meta name="description" content="An interactive, cinematic 3D book mockup viewer for La Casa de Papel. Customize page thickness, rotate the book, and download premium assets.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Fullscreen Heist Cinematic Background -->
+    <div class="cinematic-backdrop"></div>
+    
+    <!-- Background overlay for deep shadows -->
+    <div class="backdrop-shadow-overlay"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation and Controls -->
+        <header class="control-panel">
+            <div class="logo-area">
+                <span class="heist-badge">PLAN PARÍS</span>
+                <h1 class="main-title">LA CASA<br><span class="highlight">DE PAPEL</span></h1>
+                <p class="subtitle">Interactive 3D Book Experience</p>
+            </div>
+
+            <!-- Tabs/Sections -->
+            <div class="control-section">
+                <h3 class="section-title"><i class="fa-solid fa-sliders"></i> Book Customizer</h3>
+                
+                <div class="control-group">
+                    <label for="thickness-slider">
+                        <span>Page Thickness (Density)</span>
+                        <span id="page-count-display" class="value-badge">500 Pages</span>
+                    </label>
+                    <input type="range" id="thickness-slider" min="10" max="60" value="50" step="1">
+                    <span class="slider-labels">
+                        <span>100 pgs</span>
+                        <span>600 pgs</span>
+                    </span>
+                </div>
+
+                <div class="control-group">
+                    <label>3D Spin Controls</label>
+                    <div class="toggle-container">
+                        <button id="btn-spin-toggle" class="btn-toggle active" title="Toggle Auto Rotation">
+                            <i class="fa-solid fa-rotate"></i> Auto-Rotate
+                        </button>
+                        <button id="btn-reset-view" class="btn-secondary" title="Reset View Angle">
+                            <i class="fa-solid fa-arrows-to-dot"></i> Reset View
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Camera Presets</label>
+                    <div class="preset-grid">
+                        <button class="btn-preset" data-preset="front">Front</button>
+                        <button class="btn-preset active" data-preset="angle">3D Angle</button>
+                        <button class="btn-preset" data-preset="spine">Spine</button>
+                        <button class="btn-preset" data-preset="pages">Pages Edge</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3 class="section-title"><i class="fa-solid fa-cloud-arrow-down"></i> Asset Vault</h3>
+                <p class="section-desc">Download the high-fidelity custom-generated design assets.</p>
+                
+                <div class="asset-list">
+                    <div class="asset-item">
+                        <div class="asset-preview-thumb cover-thumb"></div>
+                        <div class="asset-info">
+                            <span class="asset-name">Cover Artwork</span>
+                            <span class="asset-meta">la_casa_de_papel_cover.png</span>
+                        </div>
+                        <a href="la_casa_de_papel_cover.png" download="la_casa_de_papel_cover.png" class="btn-download" title="Download Cover">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="asset-item">
+                        <div class="asset-preview-thumb bg-thumb"></div>
+                        <div class="asset-info">
+                            <span class="asset-name">Heist Background</span>
+                            <span class="asset-meta">mockup_background.png</span>
+                        </div>
+                        <a href="mockup_background.png" download="mockup_background.png" class="btn-download" title="Download Background">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="asset-item">
+                        <div class="asset-preview-thumb texture-thumb"></div>
+                        <div class="asset-info">
+                            <span class="asset-name">500-Page Edge Texture</span>
+                            <span class="asset-meta">book_pages_texture.png</span>
+                        </div>
+                        <a href="book_pages_texture.png" download="book_pages_texture.png" class="btn-download" title="Download Texture">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="panel-footer">
+                <p>Designed for La Casa de Papel Fans</p>
+                <p class="copyright">&copy; 2026 Litoral Studio</p>
+            </footer>
+        </header>
+
+        <!-- Main Viewport Area -->
+        <main class="viewport-area" id="book-viewport">
+            <!-- Instruction Toast -->
+            <div class="drag-hint">
+                <i class="fa-solid fa-hand-pointer"></i> Drag anywhere to rotate in 3D
+            </div>
+
+            <!-- The 3D Book Container -->
+            <div class="scene-3d">
+                <div class="book-mockup" id="book-3d" style="--book-thickness: 50px;">
+                    <!-- Book Front Cover -->
+                    <div class="book-face front">
+                        <div class="gold-foil-sheen"></div>
+                    </div>
+                    
+                    <!-- Book Back Cover -->
+                    <div class="book-face back">
+                        <div class="back-cover-design">
+                            <div class="back-logo">
+                                <i class="fa-solid fa-mask"></i>
+                            </div>
+                            <div class="back-text">
+                                <h2>EL PROFESOR</h2>
+                                <p>"Comienza el atraco."</p>
+                            </div>
+                            <div class="barcode"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Spine -->
+                    <div class="book-face spine">
+                        <div class="spine-content">
+                            <span class="spine-publisher">LITORAL</span>
+                            <h2 class="spine-title">LA CASA DE PAPEL</h2>
+                            <span class="spine-symbol"><i class="fa-solid fa-mask"></i></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Pages Edge (Right Side Texture) -->
+                    <div class="book-face pages-right"></div>
+                    
+                    <!-- Book Top Page Edge -->
+                    <div class="book-face pages-top"></div>
+                    
+                    <!-- Book Bottom Page Edge -->
+                    <div class="book-face pages-bottom"></div>
+                </div>
+            </div>
+
+            <!-- Ambient glow behind book -->
+            <div class="book-shadow-floor"></div>
+        </main>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

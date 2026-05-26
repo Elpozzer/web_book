@@ -1,0 +1,780 @@
+/* ==========================================================================
+   DESIGN SYSTEM & GLOBAL STYLES
+   ========================================================================== */
+:root {
+    /* Color Palette */
+    --heist-red: #D61C2A;
+    --heist-red-hover: #F22E3D;
+    --heist-red-glow: rgba(214, 28, 42, 0.4);
+    --gold-foil: #D4AF37;
+    --gold-foil-glow: rgba(212, 175, 55, 0.3);
+    
+    --bg-dark: #0A0A0B;
+    --panel-bg: rgba(14, 14, 16, 0.75);
+    --border-light: rgba(255, 255, 255, 0.06);
+    --border-focus: rgba(214, 28, 42, 0.4);
+    
+    --text-primary: #F3F3F5;
+    --text-secondary: #9E9EA7;
+    --text-muted: #5C5C64;
+    
+    /* Layout Dimensions */
+    --book-width: 300px;
+    --book-height: 440px;
+    --book-thickness: 50px; /* Overwritten dynamically by JS */
+    
+    /* Transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-snappy: all 0.2s ease-out;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    user-select: none;
+}
+
+/* ==========================================================================
+   CINEMATIC BACKDROP
+   ========================================================================== */
+.cinematic-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('mockup_background.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.65) contrast(1.1) saturate(0.9) blur(1px);
+    z-index: -2;
+    transition: var(--transition-smooth);
+}
+
+.backdrop-shadow-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 60% 50%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 80%);
+    z-index: -1;
+}
+
+/* ==========================================================================
+   APPLICATION LAYOUT
+   ========================================================================== */
+.app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+/* ==========================================================================
+   CONTROL PANEL (SIDEBAR)
+   ========================================================================== */
+.control-panel {
+    width: 380px;
+    height: 100%;
+    background: var(--panel-bg);
+    backdrop-filter: blur(24px) saturate(120%);
+    border-right: 1px solid var(--border-light);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+/* Logo & Branding */
+.logo-area {
+    margin-bottom: 35px;
+}
+
+.heist-badge {
+    background: var(--heist-red);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 12px;
+    box-shadow: 0 0 10px var(--heist-red-glow);
+}
+
+.main-title {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    color: #FFFFFF;
+}
+
+.main-title .highlight {
+    color: var(--heist-red);
+    text-shadow: 0 0 15px rgba(214, 28, 42, 0.3);
+}
+
+.subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* Control Sections */
+.control-section {
+    border-top: 1px solid var(--border-light);
+    padding: 30px 0;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: var(--heist-red);
+}
+
+.section-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+/* Interactive Groups */
+.control-group {
+    margin-bottom: 25px;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+.control-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.value-badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--gold-foil);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Custom Styled Range Input */
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    margin-bottom: 6px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--heist-red);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--heist-red-glow);
+    transition: var(--transition-snappy);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--heist-red-hover);
+    transform: scale(1.15);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* Button Layouts */
+.toggle-container {
+    display: flex;
+    gap: 12px;
+}
+
+button {
+    cursor: pointer;
+    border: 1px solid var(--border-light);
+    outline: none;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.btn-toggle {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+}
+
+.btn-toggle.active {
+    background: var(--heist-red);
+    color: #FFFFFF;
+    border-color: var(--heist-red);
+    box-shadow: 0 0 15px var(--heist-red-glow);
+}
+
+.btn-secondary {
+    padding: 12px 18px;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.btn-preset {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+}
+
+.btn-preset:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #FFFFFF;
+}
+
+.btn-preset.active {
+    border-color: var(--gold-foil);
+    color: var(--gold-foil);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+/* Asset Vault Items */
+.asset-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.asset-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: var(--transition-smooth);
+}
+
+.asset-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.asset-preview-thumb {
+    width: 36px;
+    height: 48px;
+    border-radius: 4px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cover-thumb { background-image: url('la_casa_de_papel_cover.png'); }
+.bg-thumb { background-image: url('mockup_background.png'); height: 36px; }
+.texture-thumb { background-image: url('book_pages_texture.png'); height: 36px; }
+
+.asset-info {
+    flex: 1;
+    margin-left: 12px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.asset-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.asset-meta {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.btn-download {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-download:hover {
+    background: var(--gold-foil);
+    color: #000000;
+    border-color: var(--gold-foil);
+    box-shadow: 0 0 10px var(--gold-foil-glow);
+}
+
+/* Footer panel */
+.panel-footer {
+    border-top: 1px solid var(--border-light);
+    padding-top: 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.panel-footer .copyright {
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   VIEWPORT AREA (3D WORKSPACE)
+   ========================================================================== */
+.viewport-area {
+    flex: 1;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1500px;
+    cursor: grab;
+    overflow: hidden;
+}
+
+.viewport-area:active {
+    cursor: grabbing;
+}
+
+/* Hint HUD */
+.drag-hint {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(8px);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    letter-spacing: 0.5px;
+    animation: pulseHint 3s infinite ease-in-out;
+}
+
+@keyframes pulseHint {
+    0%, 100% { opacity: 0.8; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* ==========================================================================
+   3D BOOK ENGINE
+   ========================================================================== */
+.scene-3d {
+    width: var(--book-width);
+    height: var(--book-height);
+    position: relative;
+    transform-style: preserve-3d;
+    z-index: 5;
+    transition: transform 0.1s ease-out; /* Smooth custom dragging */
+}
+
+.book-mockup {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: rotateX(25deg) rotateY(-35deg) rotateZ(0deg);
+}
+
+.book-mockup.auto-spin {
+    animation: floatAndRotate 18s infinite linear;
+}
+
+/* Floating animation */
+@keyframes floatAndRotate {
+    0% {
+        transform: rotateX(20deg) rotateY(0deg) rotateZ(0deg) translateY(0px);
+    }
+    50% {
+        transform: rotateX(24deg) rotateY(180deg) rotateZ(-1deg) translateY(-15px);
+    }
+    100% {
+        transform: rotateX(20deg) rotateY(360deg) rotateZ(0deg) translateY(0px);
+    }
+}
+
+/* Base Face Style */
+.book-face {
+    position: absolute;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
+    backface-visibility: visible;
+}
+
+/* FRONT COVER */
+.book-face.front {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: url('la_casa_de_papel_cover.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 2px 6px 6px 2px;
+    transform: translateZ(calc(var(--book-thickness) / 2));
+    box-shadow: 
+        0 0 10px rgba(0, 0, 0, 0.4),
+        inset -5px 0 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* Gold foil dynamic sheen overlay */
+.gold-foil-sheen {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0) 30%,
+        rgba(212, 175, 55, 0.15) 45%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(212, 175, 55, 0.15) 55%,
+        rgba(255, 255, 255, 0) 70%
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    opacity: 0.6;
+}
+
+.book-mockup:hover .gold-foil-sheen {
+    animation: goldSweep 2.5s ease-in-out infinite;
+}
+
+@keyframes goldSweep {
+    0% { transform: translate(-30%, -30%) rotate(25deg); }
+    100% { transform: translate(30%, 30%) rotate(25deg); }
+}
+
+/* BACK COVER */
+.book-face.back {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: #141416;
+    border-radius: 6px 2px 2px 6px;
+    transform: rotateY(180deg) translateZ(calc(var(--book-thickness) / 2));
+    box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.back-cover-design {
+    width: 100%;
+    height: 100%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #101011 0%, #161619 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.back-cover-design::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(214, 28, 42, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.back-logo {
+    font-size: 56px;
+    color: rgba(214, 28, 42, 0.2);
+}
+
+.back-text {
+    text-align: center;
+}
+
+.back-text h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-foil);
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.back-text p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.barcode {
+    width: 140px;
+    height: 45px;
+    background: repeating-linear-gradient(
+        90deg,
+        #FFF,
+        #FFF 2px,
+        #000 2px,
+        #000 4px,
+        #FFF 4px,
+        #FFF 8px
+    );
+    border: 4px solid #FFF;
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+/* BOOK SPINE */
+.book-face.spine {
+    width: var(--book-thickness);
+    height: 100%;
+    left: calc(50% - var(--book-thickness) / 2);
+    transform: rotateY(-90deg) translateZ(calc(var(--book-width) / 2));
+    background: linear-gradient(to right, #0F0F10 0%, #1C0305 30%, #44070A 50%, #1C0305 70%, #0F0F10 100%);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.spine-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 35px 0;
+    color: var(--text-primary);
+}
+
+.spine-publisher {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+.spine-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--gold-foil);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.spine-symbol {
+    font-size: 14px;
+    color: var(--heist-red);
+    text-shadow: 0 0 8px var(--heist-red-glow);
+}
+
+/* PAGES EDGE (RIGHT) */
+.book-face.pages-right {
+    width: var(--book-thickness);
+    height: calc(100% - 6px);
+    left: calc(50% - var(--book-thickness) / 2);
+    top: 3px;
+    transform: rotateY(90deg) translateZ(calc(var(--book-width) / 2 - 3px));
+    background-image: url('book_pages_texture.png');
+    background-size: cover;
+    background-position: center;
+    box-shadow: 
+        inset 5px 0 10px rgba(0, 0, 0, 0.25),
+        inset -5px 0 10px rgba(0, 0, 0, 0.25);
+    filter: brightness(0.92) contrast(1.05);
+}
+
+/* PAGES TOP */
+.book-face.pages-top {
+    width: calc(var(--book-width) - 6px);
+    height: var(--book-thickness);
+    left: 3px;
+    top: calc(50% - var(--book-thickness) / 2);
+    transform: rotateX(90deg) translateZ(calc(var(--book-height) / 2 - 3px));
+    background: repeating-linear-gradient(
+        90deg, 
+        #D2C9B9, 
+        #D2C9B9 1px, 
+        #DFD8CB 2px, 
+        #EAE5DA 3px
+    );
+    box-shadow: 
+        inset 0 5px 10px rgba(0,0,0,0.2),
+        inset 0 -5px 10px rgba(0,0,0,0.2);
+}
+
+/* PAGES BOTTOM */
+.book-face.pages-bottom {
+    width: calc(var(--book-width) - 6px);
+    height: var(--book-thickness);
+    left: 3px;
+    top: calc(50% - var(--book-thickness) / 2);
+    transform: rotateX(-90deg) translateZ(calc(var(--book-height) / 2 - 3px));
+    background: repeating-linear-gradient(
+        90deg, 
+        #C0B7A6, 
+        #C0B7A6 1px, 
+        #D2C9B9 2px, 
+        #DFD8CB 3px
+    );
+    box-shadow: 
+        inset 0 5px 10px rgba(0,0,0,0.25),
+        inset 0 -5px 10px rgba(0,0,0,0.25);
+}
+
+/* ==========================================================================
+   AMBIENT SHADOW FLOOR
+   ========================================================================== */
+.book-shadow-floor {
+    position: absolute;
+    width: 500px;
+    height: 100px;
+    bottom: 80px;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(12px);
+    pointer-events: none;
+    z-index: 1;
+    transform: rotateX(80deg) translateY(40px);
+    animation: shadowPulse 18s infinite linear;
+}
+
+@keyframes shadowPulse {
+    0%, 100% { transform: rotateX(80deg) translateY(40px) scale(1); opacity: 0.8; }
+    50% { transform: rotateX(80deg) translateY(40px) scale(0.95); opacity: 0.6; }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1024px) {
+    body {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto;
+    }
+    
+    .control-panel {
+        width: 100%;
+        height: auto;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .viewport-area {
+        height: 600px;
+        width: 100%;
+        padding: 40px 0;
+    }
+    
+    .drag-hint {
+        top: 20px;
+        right: 20px;
+    }
+    
+    .book-shadow-floor {
+        bottom: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .viewport-area {
+        height: 500px;
+    }
+    
+    .scene-3d {
+        transform: scale(0.8);
+    }
+    
+    .control-panel {
+        padding: 20px;
+    }
+    
+    .main-title {
+        font-size: 26px;
+    }
+}
